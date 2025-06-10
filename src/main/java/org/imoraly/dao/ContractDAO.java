@@ -1,13 +1,10 @@
 package org.imoraly.dao;
 
-import org.imoraly.conection.ConnectionDB;
 import org.imoraly.model.Client;
 import org.imoraly.model.Contract;
 import org.imoraly.model.Freelancer;
 
 import java.sql.*;
-
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,33 +55,52 @@ public class ContractDAO {
         List<Contract> contracts = new ArrayList<>();
 
         try {
-            String sql = "SELECT co.id as contract_id, co.description, co.status,\n" +
-                    "f.id as freela_id, f.name, f.specialty, cl.id as client_id, cl.name as client_name FROM contract co\n" +
-                    "join freelancer f on co.id_freelancer = f.id join client cl on co.id_client = cl.id;";
-
+            String sql = "SELECT co.id as contract_id, co.description,co.hourly_rate,co.contracted_hours,co.tax,co.bonus,\n" +
+                    " co.status, co.id_freelancer as co_id_freela, co.id_client as co_id_client,\n" +
+                    "f.id as freela_id, f.name,f.email as freela_email, f.specialty, cl.id as client_id, cl.name as client_name, cl.telephone," +
+                    "cl.email as client_email FROM contract co\n" +
+                    "left join freelancer f on co.id_freelancer = f.id left join client cl on co.id_client = cl.id;";
 
             PreparedStatement statement = conn.prepareStatement(sql);
             ResultSet resultSet = statement.executeQuery();
 
             while (resultSet.next()) {
-                Freelancer freelancer = new Freelancer();
-                freelancer.setId(resultSet.getInt("freela_id"));
-                freelancer.setName(resultSet.getString("name"));
-                freelancer.setSpecialty(resultSet.getString("specialty"));
-
-                Client client = new Client();
-                client.setId(resultSet.getInt("client_id"));
-                client.setName(resultSet.getString("client_name"));
-
                 Contract contract = new Contract();
+
                 contract.setId(resultSet.getInt("contract_id"));
                 contract.setDescription(resultSet.getString("description"));
+                contract.setHourlyRate(resultSet.getDouble("hourly_rate"));
+                contract.setContractedHours(resultSet.getInt("contracted_hours"));
+                contract.setTax(resultSet.getDouble("tax"));
+                contract.setBonus(resultSet.getDouble("bonus"));
                 contract.setStatus(resultSet.getString("status"));
-                contract.setFreelancer(freelancer);
-                contract.setClient(client);
+                contract.setFreelancerId(resultSet.getInt("co_id_freela"));
+                contract.setClientId(resultSet.getInt("co_id_client"));
+
+
+                int idFreela = resultSet.getInt("freela_id");
+
+                if(!resultSet.wasNull()) {
+                    Freelancer freelancer = new Freelancer();
+                    freelancer.setId(idFreela);
+                    freelancer.setName(resultSet.getString("name"));
+                    freelancer.setEmail(resultSet.getString("freela_email"));
+                    freelancer.setSpecialty(resultSet.getString("specialty"));
+                    contract.setFreelancer(freelancer);
+                }
+
+                int idClient = resultSet.getInt("client_id");
+
+                if (!resultSet.wasNull()) {
+                    Client client = new Client();
+                    client.setId(idClient);
+                    client.setName(resultSet.getString("client_name"));
+                    client.setTelephone(resultSet.getString("telephone"));
+                    client.setEmail(resultSet.getString("client_email"));
+                    contract.setClient(client);
+                }
 
                 contracts.add(contract);
-
             }
 
         } catch (SQLException e) {
@@ -98,7 +114,8 @@ public class ContractDAO {
         try {
             String sql = "SELECT co.id as contract_id, co.description,co.hourly_rate,co.contracted_hours,co.tax,co.bonus,\n" +
                     " co.status, co.id_freelancer as co_id_freela, co.id_client as co_id_client,\n" +
-                    "f.id as freela_id, f.name, f.specialty, cl.id as client_id, cl.name as client_name FROM contract co\n" +
+                    "f.id as freela_id, f.name,f.email as freela_email, f.specialty, cl.id as client_id, cl.name as client_name, cl.telephone," +
+                    "cl.email as client_email FROM contract co\n" +
                     "left join freelancer f on co.id_freelancer = f.id left join client cl on co.id_client = cl.id WHERE co.id = ?;";
 
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -119,13 +136,13 @@ public class ContractDAO {
                 contract.setClientId(resultSet.getInt("co_id_client"));
 
 
-
                 int idFreela = resultSet.getInt("freela_id");
 
                 if(!resultSet.wasNull()) {
                     Freelancer freelancer = new Freelancer();
                     freelancer.setId(idFreela);
                     freelancer.setName(resultSet.getString("name"));
+                    freelancer.setEmail(resultSet.getString("freela_email"));
                     freelancer.setSpecialty(resultSet.getString("specialty"));
                     contract.setFreelancer(freelancer);
                 }
@@ -136,6 +153,8 @@ public class ContractDAO {
                     Client client = new Client();
                     client.setId(idClient);
                     client.setName(resultSet.getString("client_name"));
+                    client.setTelephone(resultSet.getString("telephone"));
+                    client.setEmail(resultSet.getString("client_email"));
                     contract.setClient(client);
                 }
             }

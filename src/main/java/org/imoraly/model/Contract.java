@@ -107,12 +107,18 @@ public class Contract {
 
         contract.append("Contrato: ").append(id).append("\n");
         contract.append("Descrição: ").append(description).append("\n");
-        contract.append("Status: ").append(status).append("\n");
+        contract.append("Valor hora: ").append(hourlyRate).append("\n");
+        contract.append("Horas: ").append(contractedHours).append("\n");
+        contract.append("Imposto: ").append(tax).append("\n");
+        contract.append("Bonus: ").append(bonus).append("\n");
+        contract.append("Status: ").append(status).append("\n\n");
 
         if (freelancer != null) {
             contract.append("Freelancer: ").append(freelancer.getId()).append("\n");
             contract.append("Nome: ").append(freelancer.getName()).append("\n");
-            contract.append("Especialidade: ").append(freelancer.getSpecialty()).append("\n");
+            contract.append("Email: ").append(freelancer.getEmail()).append("\n");
+            contract.append("Especialidade: ").append(freelancer.getSpecialty()).append("\n\n");
+
         } else {
             contract.append("Freelancer: nenhum freelancer associado\n");
         }
@@ -120,6 +126,8 @@ public class Contract {
         if (client != null) {
             contract.append("Cliente: ").append(client.getId()).append("\n");
             contract.append("Nome: ").append(client.getName()).append("\n");
+            contract.append("Telefone: ").append(client.getTelephone()).append("\n");
+            contract.append("Email: ").append(client.getEmail()).append("\n");
         } else {
             contract.append("Cliente: nenhum cliente associado\n");
         }

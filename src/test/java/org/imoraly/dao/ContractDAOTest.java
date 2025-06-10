@@ -16,7 +16,6 @@ class ContractDAOTest {
     private Connection conn;
     private ContractDAO dao;
 
-
     @BeforeEach
     void setUp() throws SQLException {
         conn = TestDatabaseFactory.createAllTable();
@@ -62,6 +61,7 @@ class ContractDAOTest {
     }
 
     @Test
+    @DisplayName("Atualizar contrato")
     void updateContractTest() {
         Contract contract = new Contract();
 
@@ -71,25 +71,22 @@ class ContractDAOTest {
         contract.setTax(5.50);
         contract.setBonus(30.00);
         contract.setStatus("Pendente");
-        contract.setFreelancerId(2);
-        contract.setClientId(2);
+        contract.setFreelancerId(1);
+        contract.setClientId(1);
 
         dao.updateContract(contract, 1);
 
-        var atualizado = dao.readOneContract(1);
-        System.out.println(atualizado);
+        Contract actualization = dao.readOneContract(1);
+        System.out.println(actualization);
 
-        assertEquals("Criar um site simples", atualizado.getDescription());
-        assertEquals(10.00, atualizado.getHourlyRate());
-        assertEquals(4, atualizado.getContractedHours());
-        assertEquals(5.50, atualizado.getTax());
-        assertEquals(30.00, atualizado.getBonus());
-        assertEquals("Pendente", atualizado.getStatus());
-        assertEquals(2, atualizado.getFreelancerId());
-        assertEquals(2, atualizado.getClientId());
-
-        System.out.println("Contrato atualizado com sucesso.");
+        assertEquals("Criar um site simples", actualization.getDescription());
+        assertEquals(10.00, actualization.getHourlyRate());
+        assertEquals(4, actualization.getContractedHours());
+        assertEquals(5.50, actualization.getTax());
+        assertEquals(30.00, actualization.getBonus());
+        assertEquals("Pendente", actualization.getStatus());
+        assertEquals(1, actualization.getFreelancerId());
+        assertEquals(1, actualization.getClientId());
 
     }
-
 }
