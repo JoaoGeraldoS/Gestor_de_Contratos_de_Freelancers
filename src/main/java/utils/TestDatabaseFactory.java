@@ -48,9 +48,9 @@ public class TestDatabaseFactory {
         statement.execute("INSERT INTO freelancer (name, cpf, email, specialty) VALUES ('Maria', '122234567489', 'maria@gmail.com', 'Front end');");
         statement.execute("INSERT INTO client (name, cnpj_cpf, email, telephone) VALUES ('João', '12345678000199', 'joao@gmail.com', 'Back end');");
         statement.execute("""
-        INSERT INTO contract (description, hourly_rate, contracted_hours, tax, bonus, status, id_freelancer, id_client) 
-        VALUES ('Projeto Teste', 20.0, 10, 0.0, 0.0, 'Pendente', 1, 1);
-    """);
+            INSERT INTO contract (description, hourly_rate, contracted_hours, tax, bonus, status, id_freelancer, id_client) 
+            VALUES ('Projeto Teste', 20.0, 10, 0.0, 0.0, 'Pendente', 1, 1);
+        """);
 
         return conn;
     }

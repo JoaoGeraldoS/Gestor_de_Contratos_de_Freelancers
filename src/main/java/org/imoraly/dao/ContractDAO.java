@@ -93,4 +93,84 @@ public class ContractDAO {
         return contracts;
     }
 
+    public Contract readOneContract(int id) {
+        Contract contract = null;
+        try {
+            String sql = "SELECT co.id as contract_id, co.description,co.hourly_rate,co.contracted_hours,co.tax,co.bonus,\n" +
+                    " co.status, co.id_freelancer as co_id_freela, co.id_client as co_id_client,\n" +
+                    "f.id as freela_id, f.name, f.specialty, cl.id as client_id, cl.name as client_name FROM contract co\n" +
+                    "left join freelancer f on co.id_freelancer = f.id left join client cl on co.id_client = cl.id WHERE co.id = ?;";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+
+            if (resultSet.next()) {
+                 contract = new Contract();
+
+                contract.setId(resultSet.getInt("contract_id"));
+                contract.setDescription(resultSet.getString("description"));
+                contract.setHourlyRate(resultSet.getDouble("hourly_rate"));
+                contract.setContractedHours(resultSet.getInt("contracted_hours"));
+                contract.setTax(resultSet.getDouble("tax"));
+                contract.setBonus(resultSet.getDouble("bonus"));
+                contract.setStatus(resultSet.getString("status"));
+                contract.setFreelancerId(resultSet.getInt("co_id_freela"));
+                contract.setClientId(resultSet.getInt("co_id_client"));
+
+
+
+                int idFreela = resultSet.getInt("freela_id");
+
+                if(!resultSet.wasNull()) {
+                    Freelancer freelancer = new Freelancer();
+                    freelancer.setId(idFreela);
+                    freelancer.setName(resultSet.getString("name"));
+                    freelancer.setSpecialty(resultSet.getString("specialty"));
+                    contract.setFreelancer(freelancer);
+                }
+
+                int idClient = resultSet.getInt("client_id");
+
+                if (!resultSet.wasNull()) {
+                    Client client = new Client();
+                    client.setId(idClient);
+                    client.setName(resultSet.getString("client_name"));
+                    contract.setClient(client);
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao conectar");
+        }
+        return contract;
+    }
+
+    public void updateContract(Contract contract, int id) {
+
+        try {
+            String sql = " UPDATE contract SET description = ?, hourly_rate = ? , contracted_hours = ?, tax = ?," +
+                    " bonus = ?, status = ?, id_freelancer = ?, id_client = ? WHERE id = ?";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setString(1, contract.getDescription());
+            statement.setDouble(2, contract.getHourlyRate());
+            statement.setInt(3, contract.getContractedHours());
+            statement.setDouble(4, contract.getTax());
+            statement.setDouble(5, contract.getBonus());
+            statement.setString(6, contract.getStatus());
+            statement.setInt(7, contract.getFreelancerId());
+            statement.setInt(8, contract.getClientId());
+            statement.setInt(9, id);
+            statement.executeUpdate();
+
+            int rowsAffected = statement.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new RuntimeException("Nenhum contrato foi atualizado. Verifique se o ID existe.");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar!");
+        }
+    }
 }

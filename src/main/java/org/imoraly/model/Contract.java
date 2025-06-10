@@ -103,14 +103,29 @@ public class Contract {
 
     @Override
     public String toString() {
-        return String.format(
-                "Contrato: %d\nDescrição: %s\nStatus: %s\n" +
-                        "Freelancer: %d\nNome: %s\nEspecialidade: %s\n" +
-                        "Cliente: %d\nNome: %s\n" +
-                        "-----------------------------------\n",
-                this.id, this.description, this.status,
-                this.freelancer.getId(), this.freelancer.getName(), this.freelancer.getSpecialty(),
-                this.client.getId(), this.client.getName()
-        );
+        StringBuilder contract = new StringBuilder();
+
+        contract.append("Contrato: ").append(id).append("\n");
+        contract.append("Descrição: ").append(description).append("\n");
+        contract.append("Status: ").append(status).append("\n");
+
+        if (freelancer != null) {
+            contract.append("Freelancer: ").append(freelancer.getId()).append("\n");
+            contract.append("Nome: ").append(freelancer.getName()).append("\n");
+            contract.append("Especialidade: ").append(freelancer.getSpecialty()).append("\n");
+        } else {
+            contract.append("Freelancer: nenhum freelancer associado\n");
+        }
+
+        if (client != null) {
+            contract.append("Cliente: ").append(client.getId()).append("\n");
+            contract.append("Nome: ").append(client.getName()).append("\n");
+        } else {
+            contract.append("Cliente: nenhum cliente associado\n");
+        }
+
+        contract.append("-------------------------\n");
+
+        return contract.toString();
     }
 }
