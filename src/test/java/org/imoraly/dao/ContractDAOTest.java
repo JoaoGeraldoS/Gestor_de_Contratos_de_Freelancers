@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ContractDAOTest {
 
@@ -48,14 +49,13 @@ class ContractDAOTest {
     @Test
     @DisplayName("Ler os dados do banco")
     void readContractTest() {
-        dao.readContract().forEach(System.out::println);
+        dao.readContract();
     }
 
     @Test
     @DisplayName("Ler um contrato por id")
     void readOneContractTest() {
         var teste = dao.readOneContract(1);
-        System.out.println(teste);
         Assertions.assertNotNull(teste);
         assertEquals(1, teste.getId());
     }
@@ -79,6 +79,7 @@ class ContractDAOTest {
         Contract actualization = dao.readOneContract(1);
         System.out.println(actualization);
 
+
         assertEquals("Criar um site simples", actualization.getDescription());
         assertEquals(10.00, actualization.getHourlyRate());
         assertEquals(4, actualization.getContractedHours());
@@ -89,4 +90,12 @@ class ContractDAOTest {
         assertEquals(1, actualization.getClientId());
 
     }
+
+    @Test
+    @DisplayName("Verifica se exite um contrato entre freelancer e cliente")
+    void readContractForFreelancerAndClientTest() {
+        var contract = dao.readContractForFreelancerAndClient(1,1);
+        assertNotNull(contract);
+    }
+
 }

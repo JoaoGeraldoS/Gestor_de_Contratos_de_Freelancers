@@ -3,12 +3,13 @@ package org.imoraly.dao;
 import org.imoraly.model.Client;
 import org.imoraly.model.Contract;
 import org.imoraly.model.Freelancer;
+import org.imoraly.repository.IContractRepository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContractDAO {
+public class ContractDAO implements IContractRepository {
 
     private Connection conn;
 
@@ -16,7 +17,7 @@ public class ContractDAO {
         this.conn = conn;
     }
 
-
+    @Override
     public void createContract(Contract contract) {
         try {
             String sql = "INSERT INTO contract (description, hourly_rate, contracted_hours, tax," +
@@ -41,7 +42,6 @@ public class ContractDAO {
                     contract.setId(generateId);
                 }
 
-
             } else {
                 throw new RuntimeException("Erro ao salvar dados");
             }
@@ -51,14 +51,14 @@ public class ContractDAO {
         }
     }
 
+    @Override
     public List<Contract> readContract() {
         List<Contract> contracts = new ArrayList<>();
-
         try {
-            String sql = "SELECT co.id as contract_id, co.description,co.hourly_rate,co.contracted_hours,co.tax,co.bonus,\n" +
-                    " co.status, co.id_freelancer as co_id_freela, co.id_client as co_id_client,\n" +
+            String sql = "SELECT co.id as contract_id, co.description,co.hourly_rate,co.contracted_hours,co.tax,co.bonus, " +
+                    "co.status, co.id_freelancer as co_id_freela, co.id_client as co_id_client, " +
                     "f.id as freela_id, f.name,f.email as freela_email, f.specialty, cl.id as client_id, cl.name as client_name, cl.telephone," +
-                    "cl.email as client_email FROM contract co\n" +
+                    "cl.email as client_email FROM contract co " +
                     "left join freelancer f on co.id_freelancer = f.id left join client cl on co.id_client = cl.id;";
 
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -109,13 +109,14 @@ public class ContractDAO {
         return contracts;
     }
 
+    @Override
     public Contract readOneContract(int id) {
         Contract contract = null;
         try {
-            String sql = "SELECT co.id as contract_id, co.description,co.hourly_rate,co.contracted_hours,co.tax,co.bonus,\n" +
-                    " co.status, co.id_freelancer as co_id_freela, co.id_client as co_id_client,\n" +
+            String sql = "SELECT co.id as contract_id, co.description,co.hourly_rate,co.contracted_hours,co.tax,co.bonus, " +
+                    "co.status, co.id_freelancer as co_id_freela, co.id_client as co_id_client, " +
                     "f.id as freela_id, f.name,f.email as freela_email, f.specialty, cl.id as client_id, cl.name as client_name, cl.telephone," +
-                    "cl.email as client_email FROM contract co\n" +
+                    "cl.email as client_email FROM contract co " +
                     "left join freelancer f on co.id_freelancer = f.id left join client cl on co.id_client = cl.id WHERE co.id = ?;";
 
             PreparedStatement statement = conn.prepareStatement(sql);
@@ -165,6 +166,7 @@ public class ContractDAO {
         return contract;
     }
 
+    @Override
     public void updateContract(Contract contract, int id) {
 
         try {
@@ -191,5 +193,58 @@ public class ContractDAO {
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao atualizar!");
         }
+    }
+
+    @Override
+    public Contract readContractForFreelancerAndClient(int id_freela, int id_client) {
+        Contract contract = null;
+        try {
+            String sql = "SELECT * FROM contract c LEFT JOIN freelancer f ON c.id_freelancer = f.id " +
+                    "LEFT JOIN client cl ON c.id_client = cl.id WHERE f.id = ? and cl.id = ?;";
+
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, id_freela);
+            statement.setInt(2, id_client);
+            ResultSet resultSet = statement.executeQuery();
+
+            if(resultSet.next()) {
+                contract = new Contract();
+
+                contract.setId(resultSet.getInt("id"));
+                contract.setDescription(resultSet.getString("description"));
+                contract.setHourlyRate(resultSet.getDouble("hourly_rate"));
+                contract.setContractedHours(resultSet.getInt("contracted_hours"));
+                contract.setTax(resultSet.getDouble("tax"));
+                contract.setBonus(resultSet.getDouble("bonus"));
+                contract.setStatus(resultSet.getString("status"));
+                contract.setFreelancerId(resultSet.getInt("id_freelancer"));
+                contract.setClientId(resultSet.getInt("id_client"));
+
+                int idFreela = resultSet.getInt("id");
+
+                if(!resultSet.wasNull()) {
+                    Freelancer freelancer = new Freelancer();
+                    freelancer.setId(idFreela);
+                    freelancer.setName(resultSet.getString("name"));
+                    freelancer.setEmail(resultSet.getString("email"));
+                    freelancer.setSpecialty(resultSet.getString("specialty"));
+                    contract.setFreelancer(freelancer);
+                }
+
+                int idClient = resultSet.getInt("id");
+
+                if (!resultSet.wasNull()) {
+                    Client client = new Client();
+                    client.setId(idClient);
+                    client.setName(resultSet.getString("name"));
+                    client.setTelephone(resultSet.getString("telephone"));
+                    client.setEmail(resultSet.getString("email"));
+                    contract.setClient(client);
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return contract;
     }
 }
