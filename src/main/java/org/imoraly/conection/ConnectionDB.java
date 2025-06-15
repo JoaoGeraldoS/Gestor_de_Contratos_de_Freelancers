@@ -11,7 +11,6 @@ public class ConnectionDB {
     public static Connection connect() {
 
         try {
-            System.out.println("Connection to SQLite has been established.");
 
             return DriverManager.getConnection(url);
 

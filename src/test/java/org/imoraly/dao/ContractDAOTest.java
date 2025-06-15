@@ -5,8 +5,6 @@ import org.junit.jupiter.api.*;
 import utils.TestDatabaseFactory;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -55,9 +53,9 @@ class ContractDAOTest {
     @Test
     @DisplayName("Ler um contrato por id")
     void readOneContractTest() {
-        var teste = dao.readOneContract(1);
-        Assertions.assertNotNull(teste);
-        assertEquals(1, teste.getId());
+        var contract = dao.readOneContract(1);
+        Assertions.assertNotNull(contract);
+        assertEquals(1, contract.getId());
     }
 
     @Test
@@ -77,8 +75,6 @@ class ContractDAOTest {
         dao.updateContract(contract, 1);
 
         Contract actualization = dao.readOneContract(1);
-        System.out.println(actualization);
-
 
         assertEquals("Criar um site simples", actualization.getDescription());
         assertEquals(10.00, actualization.getHourlyRate());

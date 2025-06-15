@@ -7,6 +7,7 @@ public class Freelancer {
     private String email;
     private String cpf;
     private String specialty;
+    private boolean active;
 
     public int getId() {
         return id;
@@ -46,6 +47,14 @@ public class Freelancer {
 
     public void setSpecialty(String specialty) {
         this.specialty = specialty;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }
 

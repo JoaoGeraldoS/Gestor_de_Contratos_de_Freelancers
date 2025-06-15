@@ -15,7 +15,8 @@ public class TestDatabaseFactory {
                 name VARCHAR(255) NOT NULL,
                 cpf VARCHAR(12) NOT NULL UNIQUE,
                 email TEXT,
-                specialty TEXT
+                specialty TEXT,
+                active BOOLEAN DEFAULT true
             );
         """);
 
@@ -25,7 +26,8 @@ public class TestDatabaseFactory {
                 name TEXT NOT NULL,
                 cnpj_cpf TEXT NOT NULL UNIQUE,
                 email TEXT,
-                telephone TEXT
+                telephone TEXT,
+                active BOOLEAN DEFAULT true
             );
         """);
 

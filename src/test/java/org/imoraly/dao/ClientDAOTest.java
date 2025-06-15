@@ -39,4 +39,10 @@ class ClientDAOTest {
         dao.createClient(client);
         Assertions.assertNotNull(client);
     }
+
+    @Test
+    void readOnClientTest(){
+        var client = dao.readOnClient(1);
+        System.out.println(client);
+    }
 }

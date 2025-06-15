@@ -9,7 +9,7 @@ public class ContractService {
     private IContractRepository repository;
 
     public void createContract(Contract contract) {
-        if(contract.getContractedHours() < 1) {
+        if(contract.getContractedHours() <= 0) {
             throw new RuntimeException("A hora deve ser maior que 0");
         }
 
@@ -21,4 +21,17 @@ public class ContractService {
 
         repository.createContract(contract);
     }
+
+
+    public void updateContract(Contract contract, int id) {
+        Contract verifyStatus = repository.readOneContract(id);
+        String status = verifyStatus.getStatus();
+
+        if(status.equals(ContractEnum.ENCERRADO.toString()) || status.equals(ContractEnum.CANCELADO.toString())) {
+            throw new RuntimeException("Contrato não pode ser editado");
+        }
+
+        repository.updateContract(contract, id);
+    }
+
 }

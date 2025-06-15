@@ -1,23 +1,24 @@
 package org.imoraly;
 
-import org.imoraly.dao.ClientDAO;
-import org.imoraly.dao.ContractDAO;
-import org.imoraly.dao.FreelancerDAO;
 import org.imoraly.model.Client;
-import org.imoraly.model.Contract;
 import org.imoraly.model.Freelancer;
+import org.imoraly.menus.Menu;
 
 public class Main {
+
 
     public static void main(String[] args) {
 //        FreelancerDAO freelancerDAO = new FreelancerDAO();
 
+        Menu menu = new Menu();
+        menu.menuClient();
+
         Freelancer freelancer = new Freelancer();
 
-        freelancer.setName("Maria");
-        freelancer.setEmail("maria@gmail.com");
-        freelancer.setCpf("12223456789");
-        freelancer.setSpecialty("Front end");
+//        freelancer.setName("Maria");
+//        freelancer.setEmail("maria@gmail.com");
+//        freelancer.setCpf("12223456789");
+//        freelancer.setSpecialty("Front end");
 
 //        freelancerDAO.createFreelancer(freelancer);
 
@@ -32,16 +33,18 @@ public class Main {
 //        clientDAO.createClient(client);
 
 //        ContractDAO contractDAO = new ContractDAO();
-        Contract contract = new Contract();
+//        Contract contract = new Contract();
+//
+//        contract.setDescription("Criar um site simples");
+//        contract.setHourlyRate(10.00);
+//        contract.setContractedHours(4);
+//        contract.setTax(5.50);
+//        contract.setBonus(30.00);
+//        contract.setStatus("Pendente");
+//        contract.setFreelancerId(4);
+//        contract.setClientId(2);
 
-        contract.setDescription("Criar um site simples");
-        contract.setHourlyRate(10.00);
-        contract.setContractedHours(4);
-        contract.setTax(5.50);
-        contract.setBonus(30.00);
-        contract.setStatus("Pendente");
-        contract.setFreelancerId(4);
-        contract.setClientId(2);
+
 
 //        contractDAO.createContract(contract);
 

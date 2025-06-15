@@ -6,6 +6,7 @@ public class Client {
     private String cnpjOrCpf;
     private String email;
     private String telephone;
+    private boolean active;
 
     public int getId() {
         return id;
@@ -46,4 +47,30 @@ public class Client {
     public void setTelephone(String telephone) {
         this.telephone = telephone;
     }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder client = new StringBuilder();
+
+        client.append("id: ").append(id).append("\n");
+        client.append("Nome: ").append(name).append("\n");
+        client.append("Email: ").append(email).append("\n");
+        client.append("Cpf/Cnpj: ").append(cnpjOrCpf).append("\n");
+        client.append("Telefone: ").append(telephone).append("\n");
+
+        if(!isActive()) {
+            client.append("Inativo").append("\n");
+        }
+
+        return client.toString();
+    }
+
 }
