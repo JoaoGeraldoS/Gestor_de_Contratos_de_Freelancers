@@ -1,21 +1,18 @@
 package org.imoraly.dao;
 
-import org.imoraly.conection.ConnectionDB;
 import org.imoraly.model.Freelancer;
 import org.junit.jupiter.api.*;
-import org.sqlite.SQLiteException;
 import utils.TestDatabaseFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FreelancerDAOTest {
 
     private Connection conn;
     private FreelancerDAO dao;
-
 
     @BeforeEach
     void setUp() throws SQLException {
@@ -30,7 +27,7 @@ class FreelancerDAOTest {
 
     @Test
     @DisplayName("Criar freelancer ")
-    void createFreelancer() {
+    void createFreelancerTest() {
         Freelancer freelancer = new Freelancer();
 
         freelancer.setName("Maria");
@@ -40,8 +37,45 @@ class FreelancerDAOTest {
 
         dao.createFreelancer(freelancer);
         Assertions.assertNotNull(freelancer);
-
     }
 
+    @Test
+    @DisplayName("Verifica se todos os freelances estão retornando")
+    void readFreelancersTest() {
+        var freelancer = dao.readFreelances();
+        Assertions.assertNotNull(freelancer);
+    }
 
+    @Test
+    @DisplayName("Verifica se o retono do freelancer esta correto")
+    void readOnFreelancerTest() {
+        var freelancer = dao.readOnFreelancer(1);
+        Assertions.assertNotNull(freelancer);
+    }
+
+    @Test
+    @DisplayName("Tenta atualizar o freelancer")
+    void updateFreelancerTest() {
+        Freelancer freelancer = new Freelancer();
+
+        freelancer.setName("Joao");
+        freelancer.setEmail("joao@gmail.com");
+        freelancer.setCpf("1232345434");
+        freelancer.setSpecialty("Back end Java");
+
+        dao.updateFreelancer(freelancer, 1);
+
+        var actualization = dao.readOnFreelancer(1);
+
+        assertEquals("Joao", actualization.getName());
+        assertEquals("joao@gmail.com", actualization.getEmail());
+        assertEquals("1232345434", actualization.getCpf());
+        assertEquals("Back end Java", actualization.getSpecialty());
+    }
+
+    @Test
+    @DisplayName("Deleta o freelancer logicamente")
+    void deleteFreelancerTest() {
+        dao.deleteFreelancer(1);
+    }
 }

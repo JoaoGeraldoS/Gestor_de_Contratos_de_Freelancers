@@ -3,6 +3,7 @@ package org.imoraly.service;
 import org.imoraly.enums.ContractEnum;
 import org.imoraly.model.Contract;
 import org.imoraly.repository.IContractRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -27,11 +31,6 @@ class ContractServiceTest {
 
     @InjectMocks
     private ContractService service;
-
-    @BeforeEach
-    void setUp() {
-
-    }
 
     @Test
     @DisplayName("Verifica se a service esta buscando o contrato e salvando corretamente")
@@ -54,7 +53,6 @@ class ContractServiceTest {
         verify(repository, times(1)).createContract(contract);
     }
 
-
     @Test
     @DisplayName("Verifica se não foi execultado outra linha apos os testes")
     void createContractNotTest() {
@@ -72,7 +70,6 @@ class ContractServiceTest {
         assertThrows(RuntimeException.class, () -> service.createContract(contract));
 
         verify(repository, never()).readContractForFreelancerAndClient(1, 1);
-
     }
 
     @Test
@@ -108,4 +105,15 @@ class ContractServiceTest {
        verify(repository, times(1)).updateContract(contract, 1);
     }
 
+    @Test
+    void readContractsTest() {
+       service.readContracts();
+       verify(repository, times(1)).readContract();
+    }
+
+    @Test
+    void readOneContractNullTest() {
+        var contract = service.readOneContract(1);
+        Assertions.assertNull(contract);
+    }
 }

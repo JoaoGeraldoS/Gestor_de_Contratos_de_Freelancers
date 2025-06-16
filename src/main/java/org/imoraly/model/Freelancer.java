@@ -56,6 +56,22 @@ public class Freelancer {
     public void setActive(boolean active) {
         this.active = active;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder freelancer = new StringBuilder();
+
+        freelancer.append("Id: ").append(id);
+        freelancer.append("\nName: ").append(name);
+        freelancer.append("\nEmail: ").append(email);
+        freelancer.append("\nCpf: ").append(cpf);
+        freelancer.append("\nEspecialidade: ").append(specialty);
+
+        if(!isActive()) {
+            freelancer.append("\nInativo\n");
+        }
+        return freelancer.toString();
+    }
 }
 
 

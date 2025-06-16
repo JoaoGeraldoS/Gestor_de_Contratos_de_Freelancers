@@ -2,13 +2,12 @@ package org.imoraly.dao;
 
 import org.imoraly.model.Client;
 import org.junit.jupiter.api.*;
-import org.sqlite.SQLiteException;
 import utils.TestDatabaseFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ClientDAOTest {
 
@@ -28,7 +27,7 @@ class ClientDAOTest {
 
     @Test
     @DisplayName("Criar cliente")
-    void createClient() {
+    void createClientTest() {
         Client client = new Client();
 
         client.setName("Abraão");
@@ -41,8 +40,43 @@ class ClientDAOTest {
     }
 
     @Test
+    @DisplayName("Verifica se todos os clientes estão retornando")
+    void readClinetsTest() {
+        var client = dao.readClients();
+        Assertions.assertNotNull(client);
+    }
+
+    @Test
+    @DisplayName("Verifica se o retono do clente esta correto")
     void readOnClientTest(){
         var client = dao.readOnClient(1);
-        System.out.println(client);
+        Assertions.assertNotNull(client);
+    }
+
+    @Test
+    @DisplayName("Tenta atualizar o cliente")
+    void updateClientTest() {
+        Client client = new Client();
+
+        client.setName("Abraão");
+        client.setCnpjOrCpf("1233345356");
+        client.setEmail("abraao@gmail.com");
+        client.setTelephone("123456378");
+
+        dao.updateClient(client, 1);
+
+        Client actualization = dao.readOnClient(1);
+
+        assertEquals("Abraão", actualization.getName());
+        assertEquals("1233345356", actualization.getCnpjOrCpf());
+        assertEquals("abraao@gmail.com", actualization.getEmail());
+        assertEquals("123456378", actualization.getTelephone());
+
+    }
+
+    @Test
+    @DisplayName("Deleta o clinte logicamente")
+    void deleteClientTest() {
+        dao.deleteClient(1);
     }
 }

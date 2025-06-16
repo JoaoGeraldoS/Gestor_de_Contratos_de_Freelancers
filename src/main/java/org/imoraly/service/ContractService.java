@@ -22,6 +22,19 @@ public class ContractService {
         repository.createContract(contract);
     }
 
+    public void readContracts() {
+        repository.readContract().forEach(System.out::println);
+    }
+
+    public Contract readOneContract(int id) {
+        Contract contract = repository.readOneContract(id);
+
+        if(contract == null) {
+            throw new RuntimeException("Contrato não existe");
+        }
+
+       return contract;
+    }
 
     public void updateContract(Contract contract, int id) {
         Contract verifyStatus = repository.readOneContract(id);

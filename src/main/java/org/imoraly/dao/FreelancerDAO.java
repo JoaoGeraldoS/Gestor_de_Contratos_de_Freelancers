@@ -47,7 +47,6 @@ public class FreelancerDAO implements IFreelancerRepository {
         try (PreparedStatement statement = conn.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()){
 
-
             while (resultSet.next()) {
                 Freelancer freelancer = new Freelancer();
 
@@ -56,6 +55,7 @@ public class FreelancerDAO implements IFreelancerRepository {
                 freelancer.setEmail(resultSet.getString("email"));
                 freelancer.setCpf(resultSet.getString("cpf"));
                 freelancer.setSpecialty(resultSet.getString("specialty"));
+                freelancer.setActive(resultSet.getBoolean("active"));
 
                 freelancers.add(freelancer);
             }
@@ -70,22 +70,24 @@ public class FreelancerDAO implements IFreelancerRepository {
     public Freelancer readOnFreelancer(int id) {
         Freelancer freelancer = null;
 
-        String sql = "SELECT * FROM freelancer";
+        String sql = "SELECT * FROM freelancer WHERE id = ?";
 
-        try (PreparedStatement statement = conn.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()){
+        try (PreparedStatement statement = conn.prepareStatement(sql)){
+            statement.setInt(1, id);
 
+            try (ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()) {
+                    freelancer = new Freelancer();
 
-            if (resultSet.next()) {
-                 freelancer = new Freelancer();
-
-                freelancer.setId(resultSet.getInt("id"));
-                freelancer.setName(resultSet.getString("name"));
-                freelancer.setEmail(resultSet.getString("email"));
-                freelancer.setCpf(resultSet.getString("cpf"));
-                freelancer.setSpecialty(resultSet.getString("specialty"));
-
+                    freelancer.setId(resultSet.getInt("id"));
+                    freelancer.setName(resultSet.getString("name"));
+                    freelancer.setEmail(resultSet.getString("email"));
+                    freelancer.setCpf(resultSet.getString("cpf"));
+                    freelancer.setSpecialty(resultSet.getString("specialty"));
+                    freelancer.setActive(resultSet.getBoolean("active"));
+                }
             }
+
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao buscar freelancers", e);
         }

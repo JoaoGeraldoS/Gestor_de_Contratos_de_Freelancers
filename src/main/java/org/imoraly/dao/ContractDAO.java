@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ContractDAO implements IContractRepository {
 
-    private Connection conn;
+    private final Connection conn;
 
     public ContractDAO(Connection conn) {
         this.conn = conn;
@@ -23,25 +23,20 @@ public class ContractDAO implements IContractRepository {
                 "bonus, status, id_freelancer, id_client) VALUES (?,?,?,?,?,?,?,?)";
         try (PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);) {
 
-            if(conn != null) {
-                statement.setString(1, contract.getDescription());
-                statement.setDouble(2, contract.getHourlyRate());
-                statement.setInt(3, contract.getContractedHours());
-                statement.setDouble(4, contract.getTax());
-                statement.setDouble(5, contract.getBonus());
-                statement.setString(6, contract.getStatus());
-                statement.setInt(7, contract.getFreelancerId());
-                statement.setInt(8, contract.getClientId());
-                statement.executeUpdate();
+            statement.setString(1, contract.getDescription());
+            statement.setDouble(2, contract.getHourlyRate());
+            statement.setInt(3, contract.getContractedHours());
+            statement.setDouble(4, contract.getTax());
+            statement.setDouble(5, contract.getBonus());
+            statement.setString(6, contract.getStatus());
+            statement.setInt(7, contract.getFreelancerId());
+            statement.setInt(8, contract.getClientId());
+            statement.executeUpdate();
 
-                ResultSet resultSet = statement.getGeneratedKeys();
-                if(resultSet.next()) {
-                    int generateId = resultSet.getInt(1);
-                    contract.setId(generateId);
-                }
-
-            } else {
-                throw new RuntimeException("Erro ao salvar dados");
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if(resultSet.next()) {
+                int generateId = resultSet.getInt(1);
+                contract.setId(generateId);
             }
 
         } catch (SQLException e) {
@@ -173,8 +168,6 @@ public class ContractDAO implements IContractRepository {
                 " bonus = ?, status = ?, id_freelancer = ?, id_client = ? WHERE id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)){
-
-
 
             statement.setString(1, contract.getDescription());
             statement.setDouble(2, contract.getHourlyRate());
