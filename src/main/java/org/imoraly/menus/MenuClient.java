@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class Menu {
+public class MenuClient {
     private final Map<Integer, Runnable> opcoes = new HashMap<>();
     private final Scanner scanner = new Scanner(System.in);
 
@@ -19,7 +19,7 @@ public class Menu {
 
     private final ClientService service;
 
-    public Menu() {
+    public MenuClient() {
         Connection conn = ConnectionDB.connect();
         IClientRepository repository =  new ClientDAO(conn);
         this.service = new ClientService(repository);

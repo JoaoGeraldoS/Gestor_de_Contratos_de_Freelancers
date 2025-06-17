@@ -47,7 +47,7 @@ class ContractDAOTest {
     @Test
     @DisplayName("Ler os dados do banco")
     void readContractTest() {
-        dao.readContract();
+        dao.readContract().forEach(System.out::println);
     }
 
     @Test

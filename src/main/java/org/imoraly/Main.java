@@ -1,15 +1,17 @@
 package org.imoraly;
 
-import org.imoraly.model.Client;
-import org.imoraly.model.Freelancer;
-import org.imoraly.menus.Menu;
+import org.imoraly.menus.MenuClient;
+import org.imoraly.menus.MenuFreelancer;
 
 public class Main {
 
 
     public static void main(String[] args) {
-        Menu menu = new Menu();
-        menu.menuClient();
+//        MenuClient menuClient = new MenuClient();
+//        menuClient.menuClient();
+
+        MenuFreelancer menuFreelancer = new MenuFreelancer();
+        menuFreelancer.menuFreelancer();
 
 
     }

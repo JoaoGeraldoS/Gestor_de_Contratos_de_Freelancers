@@ -65,10 +65,10 @@ public class Freelancer {
         freelancer.append("\nName: ").append(name);
         freelancer.append("\nEmail: ").append(email);
         freelancer.append("\nCpf: ").append(cpf);
-        freelancer.append("\nEspecialidade: ").append(specialty);
+        freelancer.append("\nEspecialidade: ").append(specialty).append("\n");
 
         if(!isActive()) {
-            freelancer.append("\nInativo\n");
+            freelancer.append("Inativo\n");
         }
         return freelancer.toString();
     }

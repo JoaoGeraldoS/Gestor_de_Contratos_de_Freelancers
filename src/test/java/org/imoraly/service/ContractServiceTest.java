@@ -60,7 +60,7 @@ class ContractServiceTest {
 
         contract.setContractedHours(0);
 
-       assertEquals(0, contract.getContractedHours());
+        assertEquals(0, contract.getContractedHours());
 
         contract.setFreelancerId(1);
         contract.setClientId(1);
