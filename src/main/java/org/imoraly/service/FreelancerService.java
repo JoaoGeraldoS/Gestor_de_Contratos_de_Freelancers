@@ -48,6 +48,10 @@ public class FreelancerService {
     public void deleteFreelancer(int id) {
         Freelancer freelancer = repository.readOnFreelancer(id);
 
+        if(freelancer == null) {
+            throw new RuntimeException("Freelancer não existe");
+        }
+
         repository.deleteFreelancer(id);
     }
 }

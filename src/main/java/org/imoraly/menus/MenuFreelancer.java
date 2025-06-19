@@ -27,8 +27,8 @@ public class MenuFreelancer {
         opcoes.put(1, this::createFreelancer);
         opcoes.put(2, this::readAllFreelancers);
         opcoes.put(3, this::readOneFreelancer);
-        opcoes.put(4, this::deleteFreelancer);
-
+        opcoes.put(4, this::updateFreelancer);
+        opcoes.put(5, this::deleteFreelancer);
     }
 
     public void menuFreelancer() {
@@ -47,7 +47,6 @@ public class MenuFreelancer {
             }
         } while (opcao != 0);
     }
-
 
     private void createFreelancer() {
         System.out.print("Digite o nome do freelancer: ");
@@ -72,11 +71,31 @@ public class MenuFreelancer {
     private void readOneFreelancer() {
         System.out.print("Digite o id co freelancer: ");
         service.readOneFreelancer(scanner.nextInt());
+
+    }
+
+    private void updateFreelancer() {
+        System.out.print("Digite o id do freelancer: ");
+        int id = scanner.nextInt();
+        scanner.nextLine();
+
+        System.out.print("Digite o nome: ");
+        freelancer.setName(scanner.nextLine());
+
+        System.out.print("Digite o email do freelancer: ");
+        freelancer.setEmail(scanner.nextLine());
+
+        System.out.print("Digite o cpf do freelancer: ");
+        freelancer.setCpf(scanner.nextLine());
+
+        System.out.print("Digite a especialidade do freelancer: ");
+        freelancer.setSpecialty(scanner.nextLine());
+
+        service.updateFreelancer(freelancer, id);
     }
 
     private void deleteFreelancer() {
         System.out.print("Digite o id do freelancer: ");
         service.deleteFreelancer(scanner.nextInt());
     }
-
 }
