@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class FreelancerDAOTest {
 
@@ -77,5 +78,13 @@ class FreelancerDAOTest {
     @DisplayName("Deleta o freelancer logicamente")
     void deleteFreelancerTest() {
         dao.deleteFreelancer(1);
+    }
+
+    @Test
+    @DisplayName("Busca freelancer por nome e verifica se não é null")
+    void searchFreelancerTest() {
+       var freelancer = dao.searchFreelancer("Maria");
+
+       assertNotNull(freelancer);
     }
 }

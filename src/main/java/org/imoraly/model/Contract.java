@@ -1,5 +1,8 @@
 package org.imoraly.model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Contract {
     private int id;
     private String description;
@@ -12,6 +15,8 @@ public class Contract {
     private int clientId;
     private Freelancer freelancer;
     private Client client;
+    private BigDecimal imposto;
+    private BigDecimal total;
 
     public int getId() {
         return id;
@@ -101,6 +106,69 @@ public class Contract {
         this.client = client;
     }
 
+    public BigDecimal getImposto() {
+        return imposto;
+    }
+
+    public void setImposto(BigDecimal imposto) {
+        this.imposto = imposto;
+    }
+
+    public BigDecimal getTotal() {
+        return total;
+    }
+
+    public void setTotal(BigDecimal total) {
+        this.total = total;
+    }
+
+    public void contractCalculator() {
+        BigDecimal hourlyRateBD = BigDecimal.valueOf(hourlyRate);
+        BigDecimal contractedHoursBD = BigDecimal.valueOf(contractedHours);
+        BigDecimal bonusBD = BigDecimal.valueOf(bonus);
+        BigDecimal taxPercent = BigDecimal.valueOf(tax).divide(BigDecimal.valueOf(100));
+        BigDecimal subtotal = hourlyRateBD.multiply(contractedHoursBD).add(bonusBD);
+
+        this.imposto = subtotal.multiply(taxPercent).setScale(2, RoundingMode.HALF_EVEN);
+
+        this.total = subtotal.subtract(imposto).setScale(2, RoundingMode.HALF_EVEN);
+    }
+
+    public String generateReportContact() {
+        StringBuilder report = new StringBuilder();
+
+        report.append("========= CONTRATO =========\n");
+
+        report.append("Descrição: ").append(description).append("\n");
+        report.append("Status: ").append(status).append("\n");
+        report.append("----------------------------\n");
+        report.append("Valor hora: R$ ").append(String.format("%.2f", hourlyRate)).append("\n");
+        report.append("Horas contratadas: ").append(contractedHours).append("\n");
+        report.append("Bônus: R$ ").append(String.format("%.2f", bonus)).append("\n");
+        report.append("Imposto: ").append(tax).append("%\n");
+        report.append("Valor do Imposto: R$ ").append(imposto.setScale(2, RoundingMode.HALF_EVEN)).append("\n");
+        report.append("Total do contrato: R$ ").append(total.setScale(2, RoundingMode.HALF_EVEN)).append("\n");
+        report.append("----------------------------\n");
+
+        if (freelancer != null) {
+            report.append("FREELANCER\n");
+            report.append("Nome: ").append(freelancer.getName()).append("\n");
+            report.append("Email: ").append(freelancer.getEmail()).append("\n");
+            report.append("Especialidade: ").append(freelancer.getSpecialty()).append("\n");
+            report.append("----------------------------\n");
+        }
+
+        if (client != null) {
+            report.append("CLIENTE\n");
+            report.append("Nome: ").append(client.getName()).append("\n");
+            report.append("Telefone: ").append(client.getTelephone()).append("\n");
+            report.append("Email: ").append(client.getEmail()).append("\n");
+            report.append("----------------------------\n");
+        }
+
+        return report.toString();
+    }
+
     @Override
     public String toString() {
         StringBuilder contract = new StringBuilder();
@@ -111,7 +179,9 @@ public class Contract {
         contract.append("Horas: ").append(contractedHours).append("\n");
         contract.append("Imposto: ").append(tax).append("\n");
         contract.append("Bonus: ").append(bonus).append("\n");
-        contract.append("Status: ").append(status).append("\n\n");
+        contract.append("Status: ").append(status).append("\n");
+        contract.append("Impostos: R$ ").append(imposto.setScale(2, RoundingMode.HALF_EVEN)).append("\n");
+        contract.append("Total do Contrato (com imposto): R$ ").append(total.setScale(2, RoundingMode.HALF_EVEN)).append("\n\n");
 
         if (freelancer != null) {
             contract.append("Freelancer: ").append(freelancer.getId()).append("\n");

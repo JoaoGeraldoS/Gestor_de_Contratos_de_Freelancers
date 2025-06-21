@@ -25,33 +25,31 @@ public class FreelancerService {
                 .forEach(System.out::println);
     }
 
-    public void readOneFreelancer(int id) {
+    public Freelancer readOneFreelancer(int id) {
         Freelancer freelancer = repository.readOnFreelancer(id);
 
         if(freelancer == null) {
             throw new RuntimeException("Freelancer não existe");
         }
 
-        System.out.println(freelancer);
+        return freelancer;
     }
 
     public void updateFreelancer(Freelancer freelancer, int id) {
-        Freelancer buscar = repository.readOnFreelancer(id);
-
-        if(buscar == null) {
-            throw new RuntimeException("Freelancer não existe");
-        }
-
         repository.updateFreelancer(freelancer, id);
     }
 
     public void deleteFreelancer(int id) {
-        Freelancer freelancer = repository.readOnFreelancer(id);
-
-        if(freelancer == null) {
-            throw new RuntimeException("Freelancer não existe");
-        }
-
         repository.deleteFreelancer(id);
     }
+
+    public int searchFreelancer(String name) {
+        var freelancer = repository.searchFreelancer(name);
+
+        if(freelancer == null) {
+            throw new RuntimeException("freelancer nao existe");
+        }
+        return freelancer.getId();
+    }
+
 }

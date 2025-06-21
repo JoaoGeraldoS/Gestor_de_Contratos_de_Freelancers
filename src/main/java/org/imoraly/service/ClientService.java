@@ -22,12 +22,32 @@ public class ClientService {
                 .forEach(System.out::println);
     }
 
-    public void readOnClient(int id) {
-        System.out.println(repository.readOnClient(id));
+    public Client readOnClient(int id) {
+       Client client = repository.readOnClient(id);
+
+        if(client == null){
+            throw new RuntimeException("Cliente não existe");
+        }
+
+        return client;
+    }
+
+    public void updateClient(Client client, int id) {
+        repository.updateClient(client, id);
     }
 
     public void deleteClient(int id) {
         repository.deleteClient(id);
+    }
+
+    public int searchClient(String name){
+        Client client = repository.searchClient(name);
+
+        if(client == null){
+            throw new RuntimeException("Cliente não existe");
+        }
+
+        return client.getId();
     }
 
 }

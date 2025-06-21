@@ -10,4 +10,5 @@ public interface IContractRepository {
     Contract readOneContract(int id);
     void updateContract(Contract contract, int id);
     Contract readContractForFreelancerAndClient(int id_freela, int id_client);
+    void terminateOrCancelContract(Contract contract, int id);
 }

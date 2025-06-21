@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class ClientDAOTest {
 
@@ -78,5 +79,12 @@ class ClientDAOTest {
     @DisplayName("Deleta o clinte logicamente")
     void deleteClientTest() {
         dao.deleteClient(1);
+    }
+
+    @Test
+    @DisplayName("Busca client por nome e verifica se não é null")
+    void searchClientTest(){
+        var client = dao.searchClient("João");
+        assertNotNull(client);
     }
 }

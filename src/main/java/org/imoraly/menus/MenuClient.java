@@ -27,14 +27,16 @@ public class MenuClient {
         opcoes.put(1, this::addClient);
         opcoes.put(2, this::readClients);
         opcoes.put(3, this::readOnClient);
-        opcoes.put(4, this::deleteClient);
+        opcoes.put(4, this::updateClient);
+        opcoes.put(5, this::deleteClient);
     }
 
     public void menuClient() {
         int opcao;
 
         do {
-            System.out.print("Escolha uma opção: ");
+            InterfaceMenus.interfaceClient();
+
             opcao = scanner.nextInt();
             scanner.nextLine();
 
@@ -68,15 +70,33 @@ public class MenuClient {
         service.readClient();
     }
 
-    public void  readOnClient(){
+    private void  readOnClient(){
         System.out.print("Digite o id do cliente: ");
-        service.readOnClient(scanner.nextInt());
+        Client readOnClient = service.readOnClient(scanner.nextInt());
+        System.out.println(readOnClient);
     }
 
+    private void updateClient() {
+        System.out.print("Digite o id do cliente: ");
+        Client readOnClient = service.readOnClient(scanner.nextInt());
+
+        System.out.print("Digite o nome do cliente: ");
+        client.setName(scanner.nextLine());
+
+        System.out.print("Digite o cpf/cnpj do cliente: ");
+        client.setCnpjOrCpf(scanner.nextLine());
+
+        System.out.print("Digite o telefone do cliente: ");
+        client.setTelephone(scanner.nextLine());
+
+        System.out.print("Digite o email do cliente: ");
+        client.setEmail(scanner.nextLine());
+
+        service.updateClient(client, readOnClient.getId());
+    }
 
     private void deleteClient() {
         System.out.print("Digite o id do cliente: ");
         service.deleteClient(scanner.nextInt());
     }
-
 }

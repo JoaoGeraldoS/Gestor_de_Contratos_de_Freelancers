@@ -93,6 +93,7 @@ public class ContractDAO implements IContractRepository {
                     contract.setClient(client);
                 }
 
+                contract.contractCalculator();
                 contracts.add(contract);
             }
 
@@ -151,7 +152,7 @@ public class ContractDAO implements IContractRepository {
                        client.setEmail(resultSet.getString("client_email"));
                        contract.setClient(client);
                    }
-
+                   contract.contractCalculator();
                }
 
            }
@@ -165,7 +166,7 @@ public class ContractDAO implements IContractRepository {
     public void updateContract(Contract contract, int id) {
 
         String sql = " UPDATE contract SET description = ?, hourly_rate = ? , contracted_hours = ?, tax = ?," +
-                " bonus = ?, status = ?, id_freelancer = ?, id_client = ? WHERE id = ?";
+                " bonus = ?, id_freelancer = ?, id_client = ? WHERE id = ?";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)){
 
@@ -174,11 +175,9 @@ public class ContractDAO implements IContractRepository {
             statement.setInt(3, contract.getContractedHours());
             statement.setDouble(4, contract.getTax());
             statement.setDouble(5, contract.getBonus());
-            statement.setString(6, contract.getStatus());
-            statement.setInt(7, contract.getFreelancerId());
-            statement.setInt(8, contract.getClientId());
-            statement.setInt(9, id);
-
+            statement.setInt(6, contract.getFreelancerId());
+            statement.setInt(7, contract.getClientId());
+            statement.setInt(8, id);
 
             int rowsAffected = statement.executeUpdate();
             if (rowsAffected == 0) {
@@ -194,8 +193,8 @@ public class ContractDAO implements IContractRepository {
     public Contract readContractForFreelancerAndClient(int id_freela, int id_client) {
         Contract contract = null;
 
-        String sql = "SELECT * FROM contract c LEFT JOIN freelancer f ON c.id_freelancer = f.id " +
-                "LEFT JOIN client cl ON c.id_client = cl.id WHERE f.id = ? and cl.id = ?;";
+        String sql = "SELECT c.id, c.description, c.status FROM contract c LEFT JOIN freelancer f ON c.id_freelancer = f.id " +
+                "LEFT JOIN client cl ON c.id_client = cl.id WHERE f.id = ? and cl.id = ? and c.status = \"ATIVO\";";
 
         try (PreparedStatement statement = conn.prepareStatement(sql)) {
             statement.setInt(1, id_freela);
@@ -208,35 +207,7 @@ public class ContractDAO implements IContractRepository {
 
                     contract.setId(resultSet.getInt("id"));
                     contract.setDescription(resultSet.getString("description"));
-                    contract.setHourlyRate(resultSet.getDouble("hourly_rate"));
-                    contract.setContractedHours(resultSet.getInt("contracted_hours"));
-                    contract.setTax(resultSet.getDouble("tax"));
-                    contract.setBonus(resultSet.getDouble("bonus"));
                     contract.setStatus(resultSet.getString("status"));
-                    contract.setFreelancerId(resultSet.getInt("id_freelancer"));
-                    contract.setClientId(resultSet.getInt("id_client"));
-
-                    int idFreela = resultSet.getInt("id");
-
-                    if(!resultSet.wasNull()) {
-                        Freelancer freelancer = new Freelancer();
-                        freelancer.setId(idFreela);
-                        freelancer.setName(resultSet.getString("name"));
-                        freelancer.setEmail(resultSet.getString("email"));
-                        freelancer.setSpecialty(resultSet.getString("specialty"));
-                        contract.setFreelancer(freelancer);
-                    }
-
-                    int idClient = resultSet.getInt("id");
-
-                    if (!resultSet.wasNull()) {
-                        Client client = new Client();
-                        client.setId(idClient);
-                        client.setName(resultSet.getString("name"));
-                        client.setTelephone(resultSet.getString("telephone"));
-                        client.setEmail(resultSet.getString("email"));
-                        contract.setClient(client);
-                    }
                 }
             }
 
@@ -244,5 +215,25 @@ public class ContractDAO implements IContractRepository {
             throw new RuntimeException(e);
         }
         return contract;
+    }
+
+    @Override
+    public void terminateOrCancelContract(Contract contract, int id) {
+        String sql = "UPDATE contract SET status = ? WHERE id = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)){
+
+            statement.setString(1,contract.getStatus());
+            statement.setInt(2, id);
+
+            int rowsAffected = statement.executeUpdate();
+            if(rowsAffected == 0) {
+                throw new RuntimeException("Nenhum contrato foi atualizado. Verifique se o ID existe.");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao atualizar!");
+        }
+
     }
 }

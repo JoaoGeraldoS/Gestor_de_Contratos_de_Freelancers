@@ -13,8 +13,8 @@ import java.util.Scanner;
 
 public class MenuFreelancer {
 
-    private final Scanner scanner = new Scanner(System.in);
-    private final Map<Integer, Runnable> opcoes = new HashMap<>();
+    private final  Scanner scanner = new Scanner(System.in);
+    private final  Map<Integer, Runnable> opcoes = new HashMap<>();
 
     private final Freelancer freelancer = new Freelancer();
     private final FreelancerService service;
@@ -29,13 +29,15 @@ public class MenuFreelancer {
         opcoes.put(3, this::readOneFreelancer);
         opcoes.put(4, this::updateFreelancer);
         opcoes.put(5, this::deleteFreelancer);
+
     }
 
-    public void menuFreelancer() {
+    public  void  menuFreelancer() {
         int opcao;
 
         do {
-            System.out.print("Digite a opção: ");
+            InterfaceMenus.interfaceFreelancer();
+
             opcao = scanner.nextInt();
             scanner.nextLine();
 
@@ -70,14 +72,13 @@ public class MenuFreelancer {
 
     private void readOneFreelancer() {
         System.out.print("Digite o id co freelancer: ");
-        service.readOneFreelancer(scanner.nextInt());
-
+        Freelancer freela = service.readOneFreelancer(scanner.nextInt());
+        System.out.println(freela);
     }
 
     private void updateFreelancer() {
         System.out.print("Digite o id do freelancer: ");
-        int id = scanner.nextInt();
-        scanner.nextLine();
+        var id = service.readOneFreelancer(scanner.nextInt());
 
         System.out.print("Digite o nome: ");
         freelancer.setName(scanner.nextLine());
@@ -91,11 +92,12 @@ public class MenuFreelancer {
         System.out.print("Digite a especialidade do freelancer: ");
         freelancer.setSpecialty(scanner.nextLine());
 
-        service.updateFreelancer(freelancer, id);
+        service.updateFreelancer(freelancer, id.getId());
     }
 
     private void deleteFreelancer() {
         System.out.print("Digite o id do freelancer: ");
-        service.deleteFreelancer(scanner.nextInt());
+        var id = service.readOneFreelancer(scanner.nextInt());
+        service.deleteFreelancer(id.getId());
     }
 }

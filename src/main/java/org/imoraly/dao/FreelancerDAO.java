@@ -136,4 +136,27 @@ public class FreelancerDAO implements IFreelancerRepository {
             throw new RuntimeException("Erro ao apagar freelancer", e);
         }
     }
+
+    @Override
+    public Freelancer searchFreelancer(String name) {
+        String sql = "SELECT id, name FROM freelancer WHERE name = ?";
+        Freelancer freelancer = null;
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)){
+            statement.setString(1, name);
+
+            try (ResultSet resultSet = statement.executeQuery()){
+                if (resultSet.next()) {
+                    freelancer = new Freelancer();
+
+                    freelancer.setId(resultSet.getInt("id"));
+                    freelancer.setName(resultSet.getString("name"));
+                }
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao buscar freelancer: " + e.getMessage());
+        }
+        return freelancer;
+    }
 }

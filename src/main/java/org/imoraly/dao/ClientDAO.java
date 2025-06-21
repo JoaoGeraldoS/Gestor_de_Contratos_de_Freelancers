@@ -1,6 +1,7 @@
 package org.imoraly.dao;
 
 import org.imoraly.model.Client;
+import org.imoraly.model.Freelancer;
 import org.imoraly.repository.IClientRepository;
 
 import java.sql.*;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class ClientDAO implements IClientRepository {
 
-    private Connection conn; // Usado para os testes
+    private final Connection conn; // Usado para os testes
 
     public ClientDAO(Connection conn) {
         this.conn = conn;
@@ -20,21 +21,18 @@ public class ClientDAO implements IClientRepository {
         String sql = "INSERT INTO client (name, cnpj_cpf, email, telephone) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
 
-            if (conn != null) {
-                statement.setString(1, client.getName());
-                statement.setString(2, client.getCnpjOrCpf());
-                statement.setString(3, client.getEmail());
-                statement.setString(4, client.getTelephone());
-                statement.executeUpdate();
+            statement.setString(1, client.getName());
+            statement.setString(2, client.getCnpjOrCpf());
+            statement.setString(3, client.getEmail());
+            statement.setString(4, client.getTelephone());
+            statement.executeUpdate();
 
-                ResultSet resultSet = statement.getGeneratedKeys();
-                if(resultSet.next()) {
-                    int generateId = resultSet.getInt(1);
-                    client.setId(generateId);
-                }
-            } else {
-                throw new RuntimeException("Erro ao salvar informações");
+            ResultSet resultSet = statement.getGeneratedKeys();
+            if(resultSet.next()) {
+                int generateId = resultSet.getInt(1);
+                client.setId(generateId);
             }
+
         } catch (SQLException e) {
             throw new RuntimeException("Erro ao conectar", e);
         }
@@ -136,5 +134,27 @@ public class ClientDAO implements IClientRepository {
         } catch (Exception e) {
             throw new RuntimeException("erro ao deletar cliente", e);
         }
+    }
+
+    public Client searchClient(String name) {
+        Client client = null;
+        String sql = "SELECT id, name FROM client WHERE name = ?";
+
+        try (PreparedStatement statement = conn.prepareStatement(sql)){
+            statement.setString(1, name);
+
+            try (ResultSet resultSet = statement.executeQuery()){
+                if(resultSet.next()){
+                    client = new Client();
+
+                    client.setId(resultSet.getInt("id"));
+                    client.setName(resultSet.getString("name"));
+                }
+
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Client nao encontrado" + e.getMessage());
+        }
+        return client;
     }
 }

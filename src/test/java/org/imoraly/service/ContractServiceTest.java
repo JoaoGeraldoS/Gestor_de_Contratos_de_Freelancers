@@ -4,7 +4,6 @@ import org.imoraly.enums.ContractEnum;
 import org.imoraly.model.Contract;
 import org.imoraly.repository.IContractRepository;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +12,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,7 +41,7 @@ class ContractServiceTest {
         Contract contractExist = new Contract();
         contractExist.setStatus(ContractEnum.ENCERRADO.toString());
 
-        when(repository.readContractForFreelancerAndClient(1,1)).thenReturn(contractExist);
+        when(repository.readContractForFreelancerAndClient(1, 1)).thenReturn(contractExist);
         doNothing().when(repository).createContract(any(Contract.class));
 
         service.createContract(contract);
@@ -80,6 +76,7 @@ class ContractServiceTest {
         contract.setStatus(ContractEnum.ENCERRADO.toString());
         when(repository.readOneContract(1)).thenReturn(contract);
 
+
         assertThrows(RuntimeException.class, () -> service.updateContract(contract, 1));
         verify(repository, never()).updateContract(contract, 1);
     }
@@ -100,20 +97,21 @@ class ContractServiceTest {
         when(repository.readOneContract(1)).thenReturn(contractExist);
         doNothing().when(repository).updateContract(any(), anyInt());
 
-       service.updateContract(contract, 1);
+        service.updateContract(contract, 1);
 
-       verify(repository, times(1)).updateContract(contract, 1);
+        verify(repository, times(1)).updateContract(contract, 1);
     }
 
     @Test
+    @DisplayName("Verifica se foi chamdo ")
     void readContractsTest() {
-       service.readContracts();
-       verify(repository, times(1)).readContract();
+        service.readContracts();
+        verify(repository, times(1)).readContract();
     }
 
     @Test
-    void readOneContractNullTest() {
-        var contract = service.readOneContract(1);
-        Assertions.assertNull(contract);
+    @DisplayName("Verifica se retorna null")
+    void readOneContractTest() {
+        Assertions.assertThrows(RuntimeException.class, () -> service.readOneContract(1));
     }
 }

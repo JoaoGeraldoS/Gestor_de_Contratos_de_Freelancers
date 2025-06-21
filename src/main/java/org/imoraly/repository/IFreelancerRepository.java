@@ -10,4 +10,5 @@ public interface IFreelancerRepository {
     Freelancer readOnFreelancer(int id);
     void updateFreelancer(Freelancer freelancer, int id);
     void deleteFreelancer(int id);
+    Freelancer searchFreelancer(String name);
 }
