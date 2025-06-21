@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class MenuFreelancer {
 
     private final  Scanner scanner = new Scanner(System.in);
-    private final  Map<Integer, Runnable> opcoes = new HashMap<>();
+    private final  Map<Integer, Runnable> options = new HashMap<>();
 
     private final Freelancer freelancer = new Freelancer();
     private final FreelancerService service;
@@ -24,30 +24,29 @@ public class MenuFreelancer {
         IFreelancerRepository repository = new FreelancerDAO(conn);
         this.service = new FreelancerService(repository);
 
-        opcoes.put(1, this::createFreelancer);
-        opcoes.put(2, this::readAllFreelancers);
-        opcoes.put(3, this::readOneFreelancer);
-        opcoes.put(4, this::updateFreelancer);
-        opcoes.put(5, this::deleteFreelancer);
-
+        options.put(1, this::createFreelancer);
+        options.put(2, this::readAllFreelancers);
+        options.put(3, this::readOneFreelancer);
+        options.put(4, this::updateFreelancer);
+        options.put(5, this::deleteFreelancer);
     }
 
     public  void  menuFreelancer() {
-        int opcao;
+        int option;
 
         do {
             InterfaceMenus.interfaceFreelancer();
 
-            opcao = scanner.nextInt();
+            option = scanner.nextInt();
             scanner.nextLine();
 
-            Runnable runnable = opcoes.get(opcao);
+            Runnable runnable = options.get(option);
             if (runnable != null) {
                 runnable.run();
             } else {
                 System.out.println("Entrada invalida!");
             }
-        } while (opcao != 0);
+        } while (option != 0);
     }
 
     private void createFreelancer() {

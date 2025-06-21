@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 public class MenuContract {
     private final Scanner scanner = new Scanner(System.in);
-    private final Map<Integer, Runnable> opcoes = new HashMap<>();
+    private final Map<Integer, Runnable> options = new HashMap<>();
 
     private final Contract contract = new Contract();
     private final ContractService contractService;
@@ -39,29 +39,29 @@ public class MenuContract {
         IClientRepository clientRepository = new ClientDAO(conn);
         this.clientService = new ClientService(clientRepository);
 
-        opcoes.put(1, this::createContract);
-        opcoes.put(2, this::readAllContracts);
-        opcoes.put(3, this::readOnContract);
-        opcoes.put(4, this::updateContract);
-        opcoes.put(5, this::terminateOrCancelContract);
+        options.put(1, this::createContract);
+        options.put(2, this::readAllContracts);
+        options.put(3, this::readOnContract);
+        options.put(4, this::updateContract);
+        options.put(5, this::terminateOrCancelContract);
     }
 
     public void menuContract() {
-        int opcao;
+        int option;
 
         do {
             InterfaceMenus.interfaceContract();
 
-            opcao = scanner.nextInt();
+            option = scanner.nextInt();
             scanner.nextLine();
 
-            Runnable runnable = opcoes.get(opcao);
+            Runnable runnable = options.get(option);
             if(runnable != null) {
                 runnable.run();
             } else {
                 System.out.println("Entrada invalida!");
             }
-        } while (opcao != 0);
+        } while (option != 0);
     }
 
     private void createContract(){

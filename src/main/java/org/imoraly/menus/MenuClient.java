@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 public class MenuClient {
-    private final Map<Integer, Runnable> opcoes = new HashMap<>();
+    private final Map<Integer, Runnable> options = new HashMap<>();
     private final Scanner scanner = new Scanner(System.in);
 
     private final Client client = new Client();
@@ -24,30 +24,30 @@ public class MenuClient {
         IClientRepository repository =  new ClientDAO(conn);
         this.service = new ClientService(repository);
 
-        opcoes.put(1, this::addClient);
-        opcoes.put(2, this::readClients);
-        opcoes.put(3, this::readOnClient);
-        opcoes.put(4, this::updateClient);
-        opcoes.put(5, this::deleteClient);
+        options.put(1, this::addClient);
+        options.put(2, this::readClients);
+        options.put(3, this::readOnClient);
+        options.put(4, this::updateClient);
+        options.put(5, this::deleteClient);
     }
 
     public void menuClient() {
-        int opcao;
+        int option;
 
         do {
             InterfaceMenus.interfaceClient();
 
-            opcao = scanner.nextInt();
+            option = scanner.nextInt();
             scanner.nextLine();
 
-            Runnable runnable = opcoes.get(opcao);
+            Runnable runnable = options.get(option);
 
             if(runnable != null) {
                 runnable.run();
             } else {
                 System.out.println("Entrada invalida");
             }
-        } while (opcao != 0);
+        } while (option != 0);
     }
 
     private void addClient() {

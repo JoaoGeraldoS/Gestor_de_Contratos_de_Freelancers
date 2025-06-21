@@ -7,7 +7,7 @@ import org.imoraly.repository.IContractRepository;
 public class ContractService {
 
     private final IContractRepository repository;
-    private final double[] porcentagem = {5.0, 10.0, 30.0};
+    private final double[] percentage = {5.0, 10.0, 30.0};
 
     public ContractService(IContractRepository repository) {
         this.repository = repository;
@@ -19,13 +19,13 @@ public class ContractService {
             throw new RuntimeException("A hora deve ser maior que 0");
         }
 
-        for (double valor : porcentagem){
-            if(contract.getTax() != valor) {
+        for (double value : percentage){
+            if(contract.getTax() != value) {
                 System.out.println(contract.getTax());
-                System.out.println(valor);
+                System.out.println(value);
                 throw new RuntimeException("A porcentagem deve ser entre 5 a 30%");
             }
-            contract.setTax(valor);
+            contract.setTax(value);
             break;
         }
 
